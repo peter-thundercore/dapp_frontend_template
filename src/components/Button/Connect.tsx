@@ -2,7 +2,7 @@ import React from "react";
 import { displayEllipsedAddress } from "utils";
 import { useWeb3Context } from "web3-react";
 
-export default function Button() {
+const Button: React.FC = () =>{
   const context = useWeb3Context();
   const isWrongNetwork =
     context.error && context.error.message.includes("Unsupported Network");
@@ -24,3 +24,5 @@ export default function Button() {
     </>
   );
 }
+
+export default Button

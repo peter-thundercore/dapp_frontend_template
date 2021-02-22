@@ -1,4 +1,5 @@
 import { Connectors } from "web3-react";
+import { Provider } from "web3-react/dist/manager";
 const { Connector, ErrorCodeMixin } = Connectors;
 
 const InjectedConnectorErrorCodes = [
@@ -26,12 +27,14 @@ export default class InjectedConnector extends ErrorCodeMixin(
     const { ethereum, web3 } = window;
 
     if (ethereum) {
-      await ethereum.enable().catch((error) => {
-        const deniedAccessError = Error(error);
-        deniedAccessError.code =
-          InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED;
-        throw deniedAccessError;
-      });
+      if (ethereum.enable) {
+        await ethereum.enable().catch((error: Error) => {
+          // const deniedAccessError = Error(error.message);
+          // deniedAccessError.code =
+          //   InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED;
+          throw error;
+        });
+      }
 
       // initialize event listeners
       if (ethereum.on) {
@@ -59,14 +62,14 @@ export default class InjectedConnector extends ErrorCodeMixin(
       const noWeb3Error = Error(
         "Your browser is not equipped with web3 capabilities."
       );
-      noWeb3Error.code = InjectedConnector.errorCodes.NO_WEB3;
+      // noWeb3Error.code = InjectedConnector.errorCodes.NO_WEB3;
       throw noWeb3Error;
     }
   }
 
   async getProvider() {
     const { ethereum, web3 } = window;
-    return ethereum || web3.currentProvider;
+    return ethereum || web3?.currentProvider;
   }
 
   async getNetworkId() {
@@ -78,12 +81,12 @@ export default class InjectedConnector extends ErrorCodeMixin(
     );
   }
 
-  async getAccount(provider) {
+  async getAccount(provider: Provider) {
     const account = await super.getAccount(provider);
 
     if (account === null) {
       const unlockRequiredError = Error("ThunderCore account locked.");
-      unlockRequiredError.code = InjectedConnector.errorCodes.UNLOCK_REQUIRED;
+      // unlockRequiredError.code = InjectedConnector.errorCodes.UNLOCK_REQUIRED;
       throw unlockRequiredError;
     }
 
@@ -91,12 +94,12 @@ export default class InjectedConnector extends ErrorCodeMixin(
   }
 
   onDeactivation() {
-    this.runOnDeactivation.forEach((runner) => runner());
+    this.runOnDeactivation.forEach((runner:any) => runner());
     this.runOnDeactivation = [];
   }
 
   // event handlers
-  networkChangedHandler(networkId) {
+  networkChangedHandler(networkId: number) {
     const networkIdNumber = Number(networkId);
 
     try {
@@ -111,10 +114,10 @@ export default class InjectedConnector extends ErrorCodeMixin(
     }
   }
 
-  accountsChangedHandler(accounts) {
+  accountsChangedHandler(accounts: string[]) {
     if (!accounts[0]) {
       const unlockRequiredError = Error("Ethereum account locked.");
-      unlockRequiredError.code = InjectedConnector.errorCodes.UNLOCK_REQUIRED;
+      // unlockRequiredError.code = InjectedConnector.errorCodes.UNLOCK_REQUIRED;
       super._web3ReactErrorHandler(unlockRequiredError);
     } else {
       super._web3ReactUpdateHandler({

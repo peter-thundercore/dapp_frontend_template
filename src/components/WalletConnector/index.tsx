@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ethers } from "ethers";
 import { useWeb3Context } from "web3-react";
 import { isMobile } from "react-device-detect";
 
-function WalletConnector({ children }) {
+interface IProps {
+  children: React.ReactNode
+}
+
+const WalletConnector = ({ children }: IProps) => {
   const { setConnector, active } = useWeb3Context();
 
-  function tryToSetConnector(setConnector) {
+  function tryToSetConnector(setConnector: Function) {
     setConnector("Injected", {
       suppressAndThrowErrors: true,
-    }).catch((error) => {
+    }).catch((error: Error) => {
+      console.log('error:', error)
       setConnector("Network");
     });
   }
 
   useEffect(() => {
     if (!active) {
-      if (window.ethereum || window.web3) {
+      if (window.ethereum) {
         if (isMobile) {
           tryToSetConnector(setConnector);
         } else {
           const library = new ethers.providers.Web3Provider(
-            window.ethereum || window.web3
+            window.ethereum
           );
           library.listAccounts().then((accounts) => {
             if (accounts.length >= 1) {
@@ -37,7 +42,7 @@ function WalletConnector({ children }) {
     }
   }, [active, setConnector]);
 
-  return children;
+  return <>{children}</>;
 }
 
 WalletConnector.propTypes = {};

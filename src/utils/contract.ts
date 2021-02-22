@@ -1,11 +1,11 @@
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import { isAddress } from "./ethers";
 
-export function getProviderOrSigner(library, account) {
+export function getProviderOrSigner(library: any, account: string | null | undefined) {
   return account ? library.getSigner(account).connectUnchecked() : library;
 }
 
-export function getContract(address, ABI, library, account) {
+export function getContract(address: string , ABI: any, library: any, account: string | null | undefined): Contract {
   if (!isAddress(address) || address === ethers.constants.AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`);
   }
@@ -16,7 +16,7 @@ export function getContract(address, ABI, library, account) {
   );
 }
 
-export function getReadContract(address, ABI, library) {
+export function getReadContract(address: string, ABI: any, library: any): Contract {
   if (!isAddress(address) || address === ethers.constants.AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`);
   }

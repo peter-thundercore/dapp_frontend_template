@@ -2,14 +2,11 @@ import "./App.css";
 // import { useWeb3Context } from "web3-react";
 import ConnectButton from "components/Button/Connect";
 import { useErc677Contract } from "hooks/useContract";
-import WalletConnector from "components/WalletConnector.js";
+import WalletConnector from "components/WalletConnector";
 
-function App() {
+const App: React.FC = () => {
   const c1 = useErc677Contract();
   const c2 = useErc677Contract();
-  console.log("c2:", c2);
-  const isSame = c1 === c2;
-  console.log("isSame:", isSame);
   return (
     <WalletConnector>
       <div className="App">
@@ -20,6 +17,6 @@ function App() {
       </div>
     </WalletConnector>
   );
-}
+};
 
 export default App;
