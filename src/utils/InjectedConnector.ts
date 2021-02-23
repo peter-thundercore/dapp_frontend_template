@@ -27,8 +27,8 @@ export default class InjectedConnector extends ErrorCodeMixin(
     const { ethereum, web3 } = window;
 
     if (ethereum) {
-      if (ethereum.enable) {
-        await ethereum.enable().catch((error: Error) => {
+      if (ethereum.request) {
+        await ethereum.request({ method: 'eth_requestAccounts' }).catch((error: Error) => {
           // const deniedAccessError = Error(error.message);
           // deniedAccessError.code =
           //   InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED;
@@ -38,13 +38,13 @@ export default class InjectedConnector extends ErrorCodeMixin(
 
       // initialize event listeners
       if (ethereum.on) {
-        ethereum.on("networkChanged", this.networkChangedHandler);
+        ethereum.on("chainChanged", this.networkChangedHandler);
         ethereum.on("accountsChanged", this.accountsChangedHandler);
 
         this.runOnDeactivation.push(() => {
           if (ethereum.removeListener) {
             ethereum.removeListener(
-              "networkChanged",
+              "chainChanged",
               this.networkChangedHandler
             );
             ethereum.removeListener(

@@ -4,9 +4,9 @@ import { getContract } from "utils/contract";
 import { AbiItem } from 'web3-utils'
 import {parseEnv} from 'utils'
 import { exampleContractAddresses } from "constants/index";
-import Erc677Abi from "constants/abis/erc677.json";
+import erc677 from "constants/abis/erc677.json";
 
-function useContract(address: string, abi: any) {
+function useContract(address: string, abi: AbiItem) {
   const { library, account } = useWeb3Context();
   try {
     return useMemo(() => getContract(address, abi, library, account), [
@@ -19,10 +19,11 @@ function useContract(address: string, abi: any) {
   }
 }
 
-export function useErc677Contract(address?: string) {
+export function useERC677Contract(address?: string) {
   const networkID = parseEnv("REACT_APP_NETWORK_ID", "108") 
+  const erc677Abi = (erc677 as unknown) as AbiItem
   return useContract(
     address || exampleContractAddresses[networkID],
-    Erc677Abi
+    erc677Abi
   );
 }

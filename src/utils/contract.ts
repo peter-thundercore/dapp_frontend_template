@@ -5,10 +5,11 @@ export function getProviderOrSigner(library: any, account: string | null | undef
   return account ? library.getSigner(account).connectUnchecked() : library;
 }
 
-export function getContract(address: string , ABI: any, library: any, account: string | null | undefined): Contract {
+export function getContract(address: string , ABI: any, library: any, account: string | null | undefined): Contract | null {
   if (!isAddress(address) || address === ethers.constants.AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`);
   }
+  if (!library) return null
   return new ethers.Contract(
     address,
     ABI,

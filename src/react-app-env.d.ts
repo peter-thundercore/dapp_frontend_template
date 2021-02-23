@@ -7,7 +7,7 @@ interface Window {
         on?: (...args: any[]) => void
         removeListener?: (...args: any[]) => void
         autoRefreshOnNetworkChange?: boolean
-        enable: (...args: any[]) => Promise
+        request: (...args: any[]) => Promise
     }
     web3?: {
         currentProvider?: any
