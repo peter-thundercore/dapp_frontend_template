@@ -33,7 +33,7 @@ const App: React.FC = () => {
       <div className="App">
         <main className="App-header">
           <ConnectButton />
-          <h1>My new DAPP</h1>
+          <h1>My Thundercore DAPP</h1>
           <p>{token.name}</p>
           {
             token.balance && token.decimals &&
