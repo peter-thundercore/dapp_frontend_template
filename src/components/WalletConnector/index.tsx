@@ -26,7 +26,7 @@ const WalletConnector = ({ children }: IProps) => {
           tryToSetConnector(setConnector);
         } else {
           const library = new ethers.providers.Web3Provider(
-            window.ethereum
+            window.ethereum, "any"
           );
           library.listAccounts().then((accounts) => {
             if (accounts.length >= 1) {

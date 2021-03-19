@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import "./App.css";
 import ConnectButton from "components/Button/Connect";
 import { useERC677Contract } from "hooks/useContract";
-import WalletConnector from "components/WalletConnector";
+// import WalletConnector from "components/WalletConnector";
 import { useWeb3Context } from 'web3-react';
 import { fromUnits } from 'utils/ethers';
 
@@ -18,18 +18,21 @@ const App: React.FC = () => {
   useEffect(() => {
     const getTokenBalance = async () => {
       if (token1 && account) {
-        const name = (await token1.name()) as string
-        const dec = await token1.decimals()
-        const decimals = dec.toString()
-        const balance = (await token1.balanceOf(account)) as string
-        settoken({name, balance, decimals})
+        // @ts-ignore
+        const name1 = token1.name().then(res => alert(res)).catch(err => alert(err))
+        console.log('name1:', name1)
+        // const name = (await token1.name()) as string
+        // const dec = await token1.decimals()
+        // const decimals = dec.toString()
+        // const balance = (await token1.balanceOf(account)) as string
+        // settoken({name, balance, decimals})
       }
     }
     getTokenBalance()
   }, [token1, account])
   
   return (
-    <WalletConnector>
+    // <WalletConnector>
       <div className="App">
         <main className="App-header">
           <ConnectButton />
@@ -41,7 +44,7 @@ const App: React.FC = () => {
           }
         </main>
       </div>
-    </WalletConnector>
+    // </WalletConnector>
   );
 };
 

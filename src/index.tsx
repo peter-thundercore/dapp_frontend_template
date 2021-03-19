@@ -2,17 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import Web3Provider, { Connectors } from "web3-react";
-import InjectedConnector from "./utils/InjectedConnector";
 import reportWebVitals from "./reportWebVitals";
 
-const { NetworkOnlyConnector } = Connectors;
+const { NetworkOnlyConnector, InjectedConnector } = Connectors;
+const trustNetwork = 264
 const Injected = new InjectedConnector({
-  supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID || "1")],
+  // @ts-ignore
+  supportedNetworks: [Number(window.ethereum.isTrust? "0x" + trustNetwork.toString(16) : process.env.REACT_APP_NETWORK_ID || "1")],
 });
 
 const Network = new NetworkOnlyConnector({
   providerURL: process.env.REACT_APP_NETWORK_URL || "",
 });
+
 const connectors = { Injected, Network };
 
 ReactDOM.render(
